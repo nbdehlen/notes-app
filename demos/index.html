@@ -5,11 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Example app for notes widget</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main>
+    <div class="container">
+      <button id="notes-toggle">toggle me</button>
+      <main class="content">
+        <p>dont mind me, im just some background noise</p>
+      </main>
       <div id="notes-entry"></div>
-    </main>
+    </div>
     <script type="module" src="script.js"></script>
   </body>
 </html>

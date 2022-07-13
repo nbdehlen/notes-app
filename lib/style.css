@@ -1,5 +1,142 @@
-.example {
-  width: 100px;
-  height: 100px;
-  background-color: cornflowerblue;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+
+:root {
+  --background-color: rgb(11 12 22);
+  --background-secondary-color: rgb(22, 26, 49);
+  --text-color: rgb(255, 255, 255);
+  --text-color-secondary: #a0a0a0;
+  --green-color: rgb(18, 192, 108);
+  --green-darker-color: rgb(37, 71, 33);
+  --orange-color: rgb(201, 135, 74);
+  --orange-darker-color: rgb(95, 64, 35);
+  --main-font: "Montserrat", Arial, Helvetica;
+}
+
+.notes-main {
+  box-shadow: 1px 1px 20px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(149, 149, 149, 0.23);
+  border-radius: 1rem;
+  background-color: var(--background-color);
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  max-width: 40rem;
+  max-height: 80%;
+  /* looks good on mozilla */
+  overflow-y: scroll;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+}
+.inner-container {
+  /* used as indentifier in code */
+
+  /* looks good on chrome but broken on mozilla */
+  /* overflow-y: scroll; */
+}
+.draggable {
+  /* used as indentifier in code */
+}
+.list-item-container {
+  margin: 1rem 0.5rem 0 0.5rem;
+}
+.list-item-container:last-child {
+  margin-bottom: 1rem;
+}
+.list-item-title {
+  cursor: default;
+  font-size: 20px;
+  color: var(--text-color);
+  font-family: var(--main-font);
+}
+.list-item-body {
+  cursor: default;
+  font-size: 1rem;
+  color: var(--text-color-secondary);
+  font-family: var(--main-font);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+.input-title {
+  cursor: text;
+  color: var(--text-color);
+  font-size: 1.3rem;
+  background-color: var(--background-secondary-color);
+  padding: 0.5rem 0.5rem 0.1rem 0.5rem;
+  border: 1px solid var(--background-color);
+  border-radius: 0.5rem;
+}
+.input-body {
+  cursor: text;
+  margin-top: 0.5rem;
+  background-color: var(--background-secondary-color);
+  border-radius: 0.5rem;
+}
+.hidden {
+  display: none;
+}
+.top-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: move;
+  border: 1px solid rgba(149, 149, 149, 0.23);
+  border-width: 0px;
+  border-bottom-width: 1px;
+}
+.button-basics {
+  cursor: pointer;
+  border-radius: 1rem;
+  padding: 0.35rem 0.6rem;
+  background-color: transparent;
+  border-width: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--main-font);
+}
+.button-basics:hover {
+  filter: brightness(120%);
+}
+.edit-button {
+  border: 1px solid var(--orange-color);
+  background-color: var(--orange-darker-color);
+  color: var(--orange-color);
+  margin-top: 0.5rem;
+}
+.create-button {
+  color: var(--green-color);
+}
+.close-button {
+  cursor: pointer;
+  width: 1.25rem;
+  fill: white;
+}
+/* auto-resizsing textarea  */
+.div-as-textarea {
+  padding: 5px;
+  min-height: 2rem;
+  overflow: auto;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    line-height: 500px;
+  }
+  to {
+    opacity: 1;
+    line-height: 25px;
+  }
+}
+
+@keyframes slide-dn {
+  from {
+    opacity: 1;
+    line-height: 25px;
+  }
+  to {
+    opacity: 0;
+    line-height: 500px;
+  }
 }

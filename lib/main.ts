@@ -2,6 +2,8 @@ import { draggable } from "./draggable";
 import { addListener, css, removeListener } from "./helpers";
 import styles from "./style.css";
 import { NotesConfiguration, NotesState, Listener, Note } from "./types";
+import ellipsisSvg from "./assets/ellipsisVertical.svg";
+import closeSvg from "./assets/close.svg";
 
 let state: NotesState = {
   view: "LOADING",
@@ -18,15 +20,15 @@ const configure = (config: NotesConfiguration) => {
   const $notes = D.querySelector(config.attachOnQuerySelector) as HTMLElement;
   $notes.classList.add(styles.hidden, styles["notes-main"], styles.draggable);
 
+  // Top row above list items
+  const $topMenu = D.createElement("span");
+  $topMenu.classList.add(styles["top-menu"]);
+  $notes.appendChild($topMenu);
+
   // Creating inner container
   const $innerContainer = D.createElement("div");
   $innerContainer.classList.add(styles["inner-container"]);
   $notes.appendChild($innerContainer);
-
-  // Top row above list items
-  const $topMenu = D.createElement("span");
-  $topMenu.classList.add(styles["top-menu"]);
-  $innerContainer.appendChild($topMenu);
 
   // Make draggable
   draggable(styles.draggable, styles["top-menu"]);
@@ -46,12 +48,13 @@ const configure = (config: NotesConfiguration) => {
   $closeButton.ariaLabel = "button";
   $closeButton.classList.add(styles["close-button"]);
   $topMenu.appendChild($closeButton);
-  $closeButton.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-    <!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-      <path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
-    </svg>
-    `;
+
+  const $imgContainer = D.createElement("img");
+  $imgContainer.src = closeSvg;
+  css($imgContainer, {
+    height: "1.6rem",
+  });
+  $closeButton.appendChild($imgContainer);
 
   const closeButtonListener = () => {
     // close animation
@@ -152,6 +155,7 @@ const createNoteInputItem = () => {
   if ($firstListItem) {
     $firstListItem.insertAdjacentElement("beforebegin", $inputContainer);
   } else {
+    // If there are no notes, use parent as selector
     const $parentContainer = D.querySelector(`.${styles["inner-container"]}`);
     $parentContainer.appendChild($inputContainer);
   }
@@ -204,10 +208,35 @@ const noteListItem = (note: Note, parentSelector: string, i: number) => {
   const $parent = D.querySelector(parentSelector);
   $parent.appendChild($container);
 
+  // Add title and menu container
+  const $topRowContainer = D.createElement("div");
+  css($topRowContainer, {
+    display: "flex",
+    "justify-content": "space-between",
+  });
+
   // Add title
   const $textTitle = D.createElement("h2");
   $textTitle.innerText = note.title;
   $textTitle.classList.add(styles["list-item-title"]);
+  $topRowContainer.appendChild($textTitle);
+
+  // Add three-dotted menu
+  const $menuContainer = D.createElement("div");
+  css($menuContainer, {
+    width: "1rem",
+    display: "flex",
+    "justify-content": "flex-end",
+    cursor: "pointer",
+  });
+
+  const $imgContainer = D.createElement("img");
+  $imgContainer.src = ellipsisSvg;
+  css($imgContainer, {
+    height: "1.6rem",
+  });
+  $menuContainer.appendChild($imgContainer);
+  $topRowContainer.appendChild($menuContainer);
 
   // Add body
   const $textBody = D.createElement("div");
@@ -224,7 +253,7 @@ const noteListItem = (note: Note, parentSelector: string, i: number) => {
     `.${styles["list-item-container"]}:nth-of-type(${i + 1})`
   );
 
-  $itemContainer.append($textTitle, $textBody, $buttonContainer);
+  $itemContainer.append($topRowContainer, $textBody, $buttonContainer);
   $buttonContainer.appendChild($editButton);
 
   // Replaces list item with input field on 'click'

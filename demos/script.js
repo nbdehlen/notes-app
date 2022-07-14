@@ -42,6 +42,14 @@ const notesData = [
     createdAt: Date.now() - 80000,
     updatedAt: Date.now() - 120000,
   },
+  {
+    id: "5",
+    authorName: "Jan Banan",
+    title: "Another bug report",
+    body: "Crashes on initial login screen",
+    createdAt: Date.now() - 80000,
+    updatedAt: Date.now() - 120000,
+  },
 ];
 
 /* Example notes API */

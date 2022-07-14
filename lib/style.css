@@ -20,9 +20,10 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
+  min-height: 22rem;
+  min-width: 22rem;
   max-width: 40rem;
   max-height: 80%;
-  /* looks good on mozilla */
   overflow-y: scroll;
 }
 .col {
@@ -30,13 +31,10 @@
   flex-direction: column;
 }
 .inner-container {
-  /* used as indentifier in code */
-
-  /* looks good on chrome but broken on mozilla */
-  /* overflow-y: scroll; */
+  /* used as identifier in code */
 }
 .draggable {
-  /* used as indentifier in code */
+  /* used as identifier in code */
 }
 .list-item-container {
   margin: 1rem 0.5rem 0 0.5rem;
@@ -94,6 +92,7 @@
   font-size: 1rem;
   font-weight: 600;
   font-family: var(--main-font);
+  color: var(--text-color);
 }
 .button-basics:hover {
   filter: brightness(120%);

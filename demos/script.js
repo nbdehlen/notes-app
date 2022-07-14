@@ -1,5 +1,6 @@
 import notes from "../dist/main.js";
 
+/* Example data from notes API */
 const notesData = [
   {
     id: "0",
@@ -31,7 +32,7 @@ const notesData = [
     title: "Client request",
     body: "So this bug was originally caught in early May but reports have come in that it isn't solved yet.",
     createdAt: Date.now() - 80000,
-    updatedAt: Date.now() - 80000,
+    updatedAt: Date.now() - 180000,
   },
   {
     id: "4",
@@ -39,17 +40,49 @@ const notesData = [
     title: "Client request",
     body: "So this bug was originally caught in early May but reports have come in that it isn't solved yet.",
     createdAt: Date.now() - 80000,
-    updatedAt: Date.now() - 80000,
+    updatedAt: Date.now() - 120000,
   },
 ];
 
-/* Configuration for notes */
+/* Example notes API */
 const getNotes = async () => {
-  return notesData;
+  return notesData.sort((a, b) => b.createdAt - a.createdAt);
 };
-const updateNote = async () => console.log("getNotes");
-const createNote = async () => console.log("getNotes");
-const deleteNote = async () => console.log("getNotes");
+
+const updateNote = async (id, title, body) => {
+  const noteIndex = notesData.findIndex((note) => note.id === id);
+  if (noteIndex !== -1) {
+    notesData[noteIndex] = {
+      ...notesData[noteIndex],
+      ...(title && { title }),
+      ...(body && { body }),
+      authorName: "Mr.Pantalones",
+      updatedAt: Date.now(),
+    };
+  }
+};
+
+const createNote = async (title, body) => {
+  notesData.push({
+    title,
+    body,
+    authorName: "Mr.Pantalones",
+    id: `${notesData.length}`,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  });
+};
+
+const deleteNote = async (id) => {
+  const noteIndex = notesData.findIndex((note) => note.id === id);
+
+  if (noteIndex !== -1) {
+    notesData = [
+      ...notesData.slice(0, noteIndex),
+      ...notesData.slice(noteIndex + 1, notesData.length),
+    ];
+  }
+};
 
 notes.configure({
   attachOnQuerySelector: "#notes-entry",

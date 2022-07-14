@@ -22,6 +22,17 @@ export function addListener(
   store.push({ element, type, fn });
 }
 
+export function removeListener(store: Listener[], listenerToRemove: Listener) {
+  const listenerIndex = store.findIndex(
+    (listener) => listener === listenerToRemove
+  );
+  if (listenerIndex !== -1) {
+    const selected = store[listenerIndex];
+    selected.element.removeEventListener(selected.type, selected.fn);
+    store.splice(listenerIndex, 1);
+  }
+}
+
 // Add style to element
 export function css(element: HTMLElement, style: Object) {
   for (const property in style) element.style[property] = style[property];

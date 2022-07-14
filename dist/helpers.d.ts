@@ -5,4 +5,5 @@ export declare type Listener = {
     fn: EventListenerOrEventListenerObject;
 };
 export declare function addListener(store: Listener[], element: ListenerTag, fn: EventListenerOrEventListenerObject, type?: string): void;
+export declare function removeListener(store: Listener[], listenerToRemove: Listener): void;
 export declare function css(element: HTMLElement, style: Object): void;

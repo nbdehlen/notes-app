@@ -13,27 +13,17 @@ export type Note = {
   updatedAt: number;
 };
 
-export type ICreateNote = {
-  title: string;
-  body: string;
-};
-
-export type IUpdateNote = {
-  id: string;
-  title?: string;
-  body?: string;
-};
-
 export type NotesConfiguration = {
   attachOnQuerySelector: string;
   toggleOnQuerySelector?: string;
   getNotes: () => Promise<Note[]>;
-  createNote: (note: ICreateNote) => Promise<void>; // What to put here instead of void?
-  updateNote: (note: IUpdateNote) => Promise<void>;
+  createNote: (title: string, body: string) => Promise<void>; // What to put here instead of void?
+  updateNote: (id: string, title?: string, body?: string) => Promise<void>;
   deleteNote: (noteId: string) => Promise<void>;
 };
 
 export type NotesState = {
   view: "LOADING" | "READY";
   notes: Note[];
+  currentlyEditing?: Node;
 } & Partial<NotesConfiguration>;

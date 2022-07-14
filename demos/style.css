@@ -10,3 +10,26 @@
   flex-direction: row;
   background-color: rgb(34, 31, 31);
 }
+
+.sidebar {
+  background-color: rgb(43, 41, 38);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.toggle-button {
+  height: 28px;
+  width: 56px;
+  border-radius: 6px;
+  border: 1px solid gray;
+  font-family: Arial;
+  font-weight: 600;
+  background-color: transparent;
+  color: #fafafa;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  filter: brightness(150%);
+}

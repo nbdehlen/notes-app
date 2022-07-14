@@ -11,6 +11,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        // NOTE: convert bundled css to file instead of js adding it inline in html?
         test: /\.css$/i,
         use: [
           "style-loader",

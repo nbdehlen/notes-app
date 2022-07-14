@@ -54,7 +54,7 @@ const notesData = [
 
 /* Example notes API */
 const getNotes = async () => {
-  return notesData.sort((a, b) => b.createdAt - a.createdAt);
+  return notesData.sort((a, b) => b.updatedAt - a.updatedAt);
 };
 
 const updateNote = async (id, title, body) => {

@@ -21,8 +21,10 @@
   top: 1rem;
   right: 1rem;
   max-width: 36rem;
-  height: 80%;
+  max-height: 40rem;
   overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .col {
   display: flex;
@@ -31,7 +33,6 @@
 .inner-container {
   /* used as identifier in code */
   overflow-y: scroll;
-  height: 100%;
 }
 .draggable {
   /* used as identifier in code */
@@ -82,7 +83,7 @@
   border: 1px solid rgba(149, 149, 149, 0.23);
   border-width: 0px;
   border-bottom-width: 1px;
-  height: 2.4rem;
+  height: 4rem;
 }
 .button-basics {
   cursor: pointer;

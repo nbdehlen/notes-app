@@ -23,7 +23,5 @@ export type NotesConfiguration = {
 };
 
 export type NotesState = {
-  view: "LOADING" | "READY";
   notes: Note[];
-  currentlyEditing?: Node;
 } & Partial<NotesConfiguration>;

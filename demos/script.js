@@ -1,7 +1,7 @@
-import notes from "../dist/main.js";
+import notes from "./node_modules/notes-widget/main.js";
 
 /* Example data from notes API */
-const notesData = [
+let notesData = [
   {
     id: "0",
     authorName: "Jan Banan",

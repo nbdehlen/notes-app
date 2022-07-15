@@ -4,7 +4,7 @@
   "description": "A responsive notes widget written in TypeScript",
   "scripts": {
     "dev": "webpack --mode=development --watch",
-    "clean": "shx rm -rf dist",
+    "clean": "shx mv ./dist/package.json ./packagetemp.json && shx rm -rf dist && shx mkdir dist && mv ./packagetemp.json ./dist/package.json",
     "typedefs": "shx cp ./lib/types.d.ts ./dist/types.d.ts",
     "prod": "npm run clean && webpack --mode=production && npm run typedefs",
     "test": "echo \"Error: no test specified\" && exit 1"

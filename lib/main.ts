@@ -1,17 +1,18 @@
-import { draggable } from "./draggable";
-import { addListener, css, removeListener } from "./helpers";
+import draggable from "./draggable";
+import { addListener, removeAllListeners, removeListener } from "./listeners";
+import { css } from "./helpers";
 import styles from "./style.css";
 import { NotesConfiguration, NotesState, Listener, Note } from "./types";
 import ellipsisSvg from "./assets/ellipsisVertical.svg";
 import closeSvg from "./assets/close.svg";
+import dropdown from "./dropdown";
 
 let state: NotesState = {
-  view: "LOADING",
   attachOnQuerySelector: "",
   toggleOnQuerySelector: "",
   notes: [],
 };
-const listenerStore: Listener[] = [];
+
 const D = document;
 
 const configure = (config: NotesConfiguration) => {
@@ -41,7 +42,7 @@ const configure = (config: NotesConfiguration) => {
   const createButtonListener = () => {
     createNoteInputItem();
   };
-  addListener(listenerStore, $createButton, createButtonListener);
+  addListener($createButton, createButtonListener);
 
   // Add close icon
   const $closeButton = D.createElement("div");
@@ -63,7 +64,7 @@ const configure = (config: NotesConfiguration) => {
       "animation-duration": "0.25s",
     });
   };
-  addListener(listenerStore, $closeButton, closeButtonListener);
+  addListener($closeButton, closeButtonListener);
 
   const addHideListener = (e: AnimationEvent) => {
     if (e.animationName === styles["slide-dn"]) {
@@ -71,16 +72,16 @@ const configure = (config: NotesConfiguration) => {
     }
   };
   // webkitAnimationEnd for Chrome, Safari and Opera
-  addListener(listenerStore, $notes, addHideListener, "webkitAnimationEnd");
+  addListener($notes, addHideListener, "webkitAnimationEnd");
   // animationend for Firefox
-  addListener(listenerStore, $notes, addHideListener, "animationend");
+  addListener($notes, addHideListener, "animationend");
 
   // Show/hide the notes component on toggle
   if (config.toggleOnQuerySelector?.length > 0) {
     const $notesToggle = D.querySelector(config.toggleOnQuerySelector);
 
     const notesToggleListener = () => toggleNotes($notes);
-    addListener(listenerStore, $notesToggle, notesToggleListener);
+    addListener($notesToggle, notesToggleListener);
   }
 
   // Fetch initial notes and display them
@@ -89,7 +90,6 @@ const configure = (config: NotesConfiguration) => {
       renderNotesList(notes, `.${styles["inner-container"]}`);
       state.notes = notes;
     }
-    state.view = "READY";
   });
 };
 
@@ -114,8 +114,16 @@ const getNotes = async (): Promise<Note[] | undefined> => {
   return notes;
 };
 
-const createNote = async (title: string, body: string): Promise<boolean> => {
+const createNote = async (
+  title: string,
+  body: string
+): Promise<boolean | undefined> => {
   await state.createNote(title, body);
+  return true;
+};
+
+const deleteNote = async (id: string): Promise<boolean | undefined> => {
+  await state.deleteNote(id);
   return true;
 };
 
@@ -123,7 +131,7 @@ const updateNote = async (
   id: string,
   title?: string,
   body?: string
-): Promise<boolean> => {
+): Promise<boolean | undefined> => {
   await state.updateNote(id, title, body);
 
   return true;
@@ -144,6 +152,7 @@ const createNoteInputItem = () => {
   );
   $textBody.spellcheck = true;
   $textBody.contentEditable = "true";
+  $textBody.ariaLabel = "textarea";
 
   $inputContainer.appendChild($textTitle);
   $inputContainer.appendChild($textBody);
@@ -171,9 +180,6 @@ const replaceNoteItemWithInputs = (
   const $container = D.createElement("div");
   $container.classList.add(styles.col, styles["list-item-container"]);
 
-  // Used for updating notes
-  replaceElement.setAttribute("data-id", state.notes[i].id);
-
   const $textTitle = D.createElement("input");
   $textTitle.value = state.notes[i].title;
   $textTitle.classList.add(styles["input-title"]);
@@ -198,7 +204,6 @@ const replaceNoteItemWithInputs = (
 
   // Add input buttons
   addInputButtons($container, replaceElement);
-  // TODO: Remove listener for EDIT button
 };
 
 const noteListItem = (note: Note, parentSelector: string, i: number) => {
@@ -224,7 +229,6 @@ const noteListItem = (note: Note, parentSelector: string, i: number) => {
   // Add three-dotted menu
   const $menuContainer = D.createElement("div");
   css($menuContainer, {
-    width: "1rem",
     display: "flex",
     "justify-content": "flex-end",
     cursor: "pointer",
@@ -236,7 +240,48 @@ const noteListItem = (note: Note, parentSelector: string, i: number) => {
     height: "1.6rem",
   });
   $menuContainer.appendChild($imgContainer);
-  $topRowContainer.appendChild($menuContainer);
+
+  // Create 'delete list item' for dropdown
+  const $deleteListItem = D.createElement("div");
+  $deleteListItem.innerText = "Delete";
+  $deleteListItem.classList.add(styles["dd-item"], styles["dd-delete-item"]);
+
+  const $placeholder = D.createElement("div");
+  $placeholder.innerText = "Placeholder item";
+  $placeholder.classList.add(styles["dd-item"]);
+
+  // Add listener to dropdown item 'delete'
+  const deleteListItemListener = () => {
+    // TODO: Do something more with this or change icon and naming to "red minus icon for deleting"
+    const id = $itemContainer.getAttribute("data-id");
+    deleteNote(id).then((noteDeleted) => {
+      if (noteDeleted) {
+        getNotes().then((notes) => {
+          if (notes) {
+            // Remove all previous notes
+            const notesContainerClassName = `.${styles["inner-container"]}`;
+            const $notesContainer = D.querySelector(notesContainerClassName);
+            const $listItems = $notesContainer.querySelectorAll(
+              `.${styles["list-item-container"]}`
+            );
+            $listItems.forEach((item) => item.remove());
+            // TODO: Compare notes id before deciding on re-creating?
+
+            // Render the new list of notes
+            renderNotesList(notes, notesContainerClassName);
+            state.notes = notes;
+          }
+        });
+      }
+    });
+  };
+  addListener($deleteListItem, deleteListItemListener);
+
+  // Create dropdown
+  const $dropdown = dropdown($menuContainer, [$deleteListItem, $placeholder], {
+    itemsContainerClasses: [styles["dd-items-container"]],
+  });
+  $topRowContainer.appendChild($dropdown);
 
   // Add body
   const $textBody = D.createElement("div");
@@ -260,7 +305,10 @@ const noteListItem = (note: Note, parentSelector: string, i: number) => {
   const editButtonListener = () => {
     replaceNoteItemWithInputs($itemContainer as HTMLElement, parentSelector, i);
   };
-  addListener(listenerStore, $editButton, editButtonListener);
+  addListener($editButton, editButtonListener);
+
+  // Used for updating and deleting notes
+  $itemContainer.setAttribute("data-id", note.id);
 };
 
 const renderNotesList = (notes: Note[], parentSelector: string) => {
@@ -320,7 +368,6 @@ const addInputButtons = (
             renderNotesList(notes, notesContainerClassName);
             state.notes = notes;
           }
-          state.view = "READY";
         });
       }
     };
@@ -336,12 +383,12 @@ const addInputButtons = (
 
   const removeInputMode = () => {
     // Remove input elements and their event listeners when the note is being rendered as a List item
-    removeListener(listenerStore, {
+    removeListener({
       element: $saveButton,
       type: "click",
       fn: saveOrUpdateListener,
     });
-    removeListener(listenerStore, {
+    removeListener({
       element: $cancelButton,
       type: "click",
       fn: cancelListener,
@@ -350,14 +397,12 @@ const addInputButtons = (
     title.remove();
     body.remove();
   };
-  addListener(listenerStore, $saveButton, saveOrUpdateListener);
-  addListener(listenerStore, $cancelButton, cancelListener);
+  addListener($saveButton, saveOrUpdateListener);
+  addListener($cancelButton, cancelListener);
 };
 
 const destroy = () => {
-  listenerStore.forEach(({ element, type, fn }) =>
-    element.removeEventListener(type, fn)
-  );
+  removeAllListeners();
 
   const notes = D.querySelector(state.attachOnQuerySelector);
   if (notes) {

@@ -1,7 +1,9 @@
-export function draggable(dragClassName: string, dragOnClassName: string) {
-  // TODO: Typing
-  function filter(e: any) {
-    const { target: dragByElement } = e;
+export default function draggable(
+  dragClassName: string,
+  dragOnClassName: string
+) {
+  function filter(e: MouseEvent | TouchEvent) {
+    const dragByElement = e.target as HTMLElement;
 
     if (!dragByElement.classList.contains(dragOnClassName)) {
       return;
@@ -10,13 +12,15 @@ export function draggable(dragClassName: string, dragOnClassName: string) {
     const dragElement = document.querySelector(`.${dragClassName}`) as any;
     dragElement.moving = true;
 
-    // Check if Mouse events exist on users' device
-    if (e.clientX) {
-      dragElement.oldX = e.clientX; // If they exist then use Mouse input
+    // Check if mouse event or touch event
+    if (e instanceof MouseEvent) {
+      dragElement.oldX = e.clientX;
       dragElement.oldY = e.clientY;
-    } else {
-      dragElement.oldX = e.touches[0].clientX; // Otherwise use touch input
+    } else if (e instanceof TouchEvent) {
+      dragElement.oldX = e.touches[0].clientX;
       dragElement.oldY = e.touches[0].clientY;
+    } else {
+      console.warn("event is neither MouseEvent nor TouchEvent");
     }
 
     dragElement.oldLeft =
@@ -37,19 +41,19 @@ export function draggable(dragClassName: string, dragOnClassName: string) {
     document.onmousemove = dr;
     document.ontouchmove = dr;
 
-    function dr(event: any) {
-      // event.preventDefault();
-
+    function dr(event: MouseEvent | TouchEvent) {
       if (!dragElement.moving) {
         return;
       }
 
-      if (event.clientX) {
+      if (event instanceof MouseEvent) {
         dragElement.distX = event.clientX - dragElement.oldX;
         dragElement.distY = event.clientY - dragElement.oldY;
-      } else {
+      } else if (e instanceof TouchEvent) {
         dragElement.distX = event.touches[0].clientX - dragElement.oldX;
         dragElement.distY = event.touches[0].clientY - dragElement.oldY;
+      } else {
+        console.warn("event is neither MouseEvent nor TouchEvent");
       }
 
       dragElement.style.left = dragElement.oldLeft + dragElement.distX + "px";

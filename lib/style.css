@@ -25,6 +25,7 @@
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
+  min-width: 20rem;
 }
 .col {
   display: flex;
@@ -112,13 +113,37 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 0 0.5rem;
+  padding: 0 0.6rem;
 }
 /* auto-resizsing textarea  */
 .div-as-textarea {
   padding: 5px;
   min-height: 2rem;
   overflow: auto;
+}
+
+.dd-items-container {
+  background-color: var(--background-secondary-color);
+  min-width: 160px;
+  right: 0px;
+  border: 1px solid rgba(149, 149, 149, 0.23);
+  border-radius: 0.5rem;
+}
+
+.dd-item {
+  color: var(--text-color);
+  font-family: var(--main-font);
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.dd-item:hover {
+  background-color: var(--background-secondary-color);
+  filter: brightness(125%);
+}
+
+.dd-delete-item {
+  color: #f75858;
 }
 
 @keyframes slide-up {

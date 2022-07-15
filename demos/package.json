@@ -1,0 +1,13 @@
+{
+  "name": "vanilla_import",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "notes-widget": "https://gitpkg.now.sh/nbdehlen/notes-app/dist?master"
+  }
+}

@@ -8,7 +8,7 @@ In your projects `package.json` dependencies:
 
 ## How to run the demo
 
-`npm i` in the terminal and start a live server
+`cd demos && npm i` in the terminal and start a live server
 
 ## Design
 

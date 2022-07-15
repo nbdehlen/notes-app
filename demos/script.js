@@ -1,4 +1,4 @@
-import notes from "./node_modules/notes-widget/main.js";
+import notesWidget from "notes-widget";
 
 /* Example data from notes API */
 let notesData = [
@@ -92,7 +92,7 @@ const deleteNote = async (id) => {
   }
 };
 
-notes.configure({
+notesWidget.configure({
   attachOnQuerySelector: "#notes-entry",
   toggleOnQuerySelector: "#notes-toggle",
   getNotes,

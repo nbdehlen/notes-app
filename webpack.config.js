@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./lib/main.ts",
+  entry: "./lib/index.ts",
   devtool: "inline-source-map",
   module: {
     rules: [
@@ -33,15 +33,13 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
   },
+  target: "web",
   output: {
-    filename: "main.js",
-    path: path.resolve(__dirname, "dist"),
-    library: {
-      type: "module",
-    },
-  },
-  experiments: {
-    // In order to select library.type = "module"
-    outputModule: true,
+    filename: "index.js",
+    path: path.resolve(__dirname, "./dist"),
+    library: "NotesWidget",
+    libraryTarget: "umd",
+    globalObject: "this",
+    umdNamedDefine: true,
   },
 };

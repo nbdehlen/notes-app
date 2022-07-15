@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "author": "Bastian D",
-  "license": "ISC"
+  "license": "ISC",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ]
 }

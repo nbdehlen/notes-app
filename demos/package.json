@@ -8,6 +8,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "notes-widget": "https://gitpkg.now.sh/nbdehlen/notes-app/dist?master"
+    "notes-widget": "npm install 'https://gitpkg.now.sh/nbdehlen/notes-app/dist?feature/npm-linked'"
   }
 }
